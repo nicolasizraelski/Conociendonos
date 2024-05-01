@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
+
+import static cuidandonos.TipoViaje.ESPERA;
+
 @Setter
 @Getter
 public class Viaje {
@@ -29,7 +32,8 @@ public class Viaje {
 
         if(esViajePorParadas()){
             double acumDemoras = primerDemora;
-            for(int i = 1; i < paradas.size() - 1 ; i++){
+
+            for(int i = 0 ; i < paradas.size() - 1 ; i++){
                 Parada inicio = paradas.get(i);
                 Parada destino = paradas.get(i + 1);
 
@@ -38,11 +42,14 @@ public class Viaje {
 
                 acumDemoras += dem;
             }
-
+            if(tipoViaje == ESPERA){
+                acumDemoras += paradas.stream()
+                        .mapToDouble(Parada::getDetencion)
+                        .sum();
+            }
             demoraAproximadaEnMins = acumDemoras;
         }else{
             demoraAproximadaEnMins = primerDemora;
         }
-
     }
 }
